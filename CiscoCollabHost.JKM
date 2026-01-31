@@ -1,0 +1,11 @@
+[Laptop Keys]
+Shift+Insert+Z=GetTechnicalInfo
+Shift+Control+T=ActivateTransferNowButton
+Shift+Control+G=ActivateCheckFirstButton
+Shift+Control+Z=ActivateEraseEntryButton
+Shift+Control+Q=ActivateCancelButton
+Shift+Control+S=CheckMuteStatus
+Shift+Insert+F1=HotKeyHelp
+[Common Keys]
+Shift+Control+K=ActivateKeyboardButton
+Shift+Control+Z=ActivateEraseEntryButton

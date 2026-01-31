@@ -1,0 +1,44 @@
+:function AutoStartEvent
+:SearchRank 1
+
+:script HotKeyHelp
+:SearchRank 1
+
+:script GetTechnicalInfo
+:SearchRank 1
+:Synopsis Obtiene diferentes códigos de identificación del objeto enfocado y de la ventana en la que se encuentra, como el nombre de su ventana, su Control ID, su Automation ID, el nombre de su tipo de clase,  o su nombre y contenido.
+:Description Si se pulsa una vez se anuncia la información  técnica. Si se pulsa dos veces rápidamente, se muestra en el visor virtual la información y puede ser copiada desde allí a otras aplicaciones.
+
+:script CheckMuteStatus
+:SearchRank 1
+:Synopsis Anuncia si el silencio del micrófono está activado o desactivado.
+:Description Busca el botón Silenciar entre los objetos de la barra de control y verifica en qué estado (silencio activado o desactivado) se encuentra el micrófono. Si está en primer plano alguna ventana desde la que no es posible alterar el estado del silencio del micrófono, lo detecta y también lo anuncia.
+
+:script ActivateCheckFirstButton
+:SearchRank 1
+:Synopsis Activa el botón "Consultar primero" en el diálogo de Transferencia si este está abierto
+:Description Verifica que esté abierto el diálogo de transferencia y busca el botón "Consultar primero" entre sus objetos y lo activa
+:Category Find
+
+:script ActivateTransferNowButton
+:SearchRank 1
+:Synopsis Activa el botón "Transferir ahora" en el diálogo de Transferencia si este está abierto
+:Description Verifica que esté abierto el diálogo de transferencia y busca el botón "Transferir ahora" entre sus objetos y lo activa
+:Category Find
+
+:script ActivateEraseEntryButton
+:SearchRank 1
+:Synopsis Activa el botón "Borrar entrada" en el diálogo de Transferencia o en el de Conferencia y en la búsqueda de la ventana principal de Webex, si alguno de ellos está en primer plano y el botón Borrar entrada está disponible
+:Description Verifica que el diálogo de Transferencia, el de Conferencia, o la ventana principal de Webex  tenga el foco y busca entre sus objetos el que tenga la clase o el automation ID que corresponda con el botón Borrar entrada.
+
+:script ActivateCancelButton
+:SearchRank 1
+:Synopsis Activa el botón "Cancelar" en el diálogo de Transferencia o en el de Conferencia, si alguno de ellos está abierto.
+:Description Verifica que el diálogo de Transferencia o el de Conferencia esté abierto y busca entre sus objetos el que tenga la clase que corresponda con el botón Cancelar.
+
+:script ActivateKeyboardButton
+:SearchRank 1
+:Synopsis Busca el botón que despliega el teclado de marcación durante una llamada para poder marcar opciones de menús en servicios de asistencia telefónica automatizada
+:Description Verifica que haya en primer plano una ventana de llamada y busca entre sus objetos el que tenga el automation ID que corresponda con el botón que despliega el teclado de marcación.
+
+
