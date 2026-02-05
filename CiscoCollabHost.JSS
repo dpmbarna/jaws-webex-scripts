@@ -1,5 +1,10 @@
-	; Webex script file versión v1.0
-	; Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
+	; Webex script file versión v1.1
+	; * Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
+	; * Versión 1.0 terminada el 30/01/2026
+	; * Versión 1.1 terminada el 05/02/2026.
+ ; - Corregido que cuando se activa el comando para borrar el texto del cuadro de edición de búsqueda de la pantalla principal de Webex y no hay texto en él,
+; el foco quede en dicho cuadro de edición en lugar de en el objeto siguiente (botón "Conectar a un dispositivo" en mis pruebas).
+
 	; Los controles que activan estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
 	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
 	; y además, algunos objetos ni siquiera Tienen un automation ID Único o Con alguna etiqueta incorporada.
@@ -518,13 +523,16 @@ Script ActivateEraseEntryButton ()
 				TypeKey ("tab")
 				Pause ()
 				sID = GetObjectAutomationId(0)
-				; Y si el siguiente objeto a él es uno de los de la ventana principal,
+		; Y si el siguiente objeto a él es uno de los de la ventana principal,
 				; es porque no hay ninguna búsqueda desplegada,
 				; y por tanto, ningún botón de borrar entrada disponible.
 				If sID == AutomationID_MainWindowObject then
 					SpeechOn ()
 					SayString (msgErrTextEntryNoFound)
 					BrailleMessage (msgErrTextEntryNoFound)
+					SpeechOff ()
+					TypeKey ("Control+F")
+					SpeechON ()
 					Return
 				EndIf
 				; Si el botón que se encuentra a continuación es el de borrar entrada se activa.
