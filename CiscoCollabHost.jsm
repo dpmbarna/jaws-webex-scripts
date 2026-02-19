@@ -51,7 +51,10 @@ Pulsa Escape para cerrar esta ventana
 INFORMACIÓN TÉCNICA DEL CONTROL / OBJETO Y VENTANA ENFOCADOS:
 @@
 @msgDiagWinName
-El nombre de la ventana es: 
+El nombre de la ventana enfocada es: 
+@@
+@msgMainWinName
+El nombre de la ventana principal ahora es: 
 @@
 @msgDiagWinClass
 La Clase de ventana del foco es:	
@@ -166,5 +169,8 @@ No hay focalizado ningún cuadro de diálogo que incluya el botón Cancelar o ha
 @@
 @msgErrKeyboardNotFound
 No se ha localizado el botón que abre el teclado de marcación
+@@
+@msgErrKeyboardDialogBlock
+Hay algún cuadro de diálogo enfocado ahora y el botón que despliega el teclado no está disponible de momento
 @@
 EndMessages

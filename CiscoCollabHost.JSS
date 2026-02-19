@@ -1,10 +1,13 @@
-	; Webex script file versión v1.1
-	; * Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
+	; Webex script file versión v1.2
+	; Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
 	; * Versión 1.0 terminada el 30/01/2026
-	; * Versión 1.1 terminada el 05/02/2026.
- ; - Corregido que cuando se activa el comando para borrar el texto del cuadro de edición de búsqueda de la pantalla principal de Webex y no hay texto en él,
-; el foco quede en dicho cuadro de edición en lugar de en el objeto siguiente (botón "Conectar a un dispositivo" en mis pruebas).
-
+	; * Versión 1.1 terminada el 05/02/2026: 
+; se modifica el script ActivateEraseEntryButton para que cuando sea activado en la ventana principal de Webex no habiendo ningún texto en el cuadro de edición de búsqueda, el foco quede en este último y no en el objeto siguiente a él.
+	; * Versión 1.2 terminada el 19/02/2026:
+; se modifican los parámetros de la función GetwindowName en todos los scripts para que recoja correctamente el nombre de la ventana enfocada en cada momento
+; ya que, como consecuencia de una actualización de Webex en esas fechas, varios scripts dejaron de funcionar correctamente,
+; y se adapta parte del código del script ActivateKeyboardButton para que siga funcionando.
+	
 	; Los controles que activan estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
 	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
 	; y además, algunos objetos ni siquiera Tienen un automation ID Único o Con alguna etiqueta incorporada.
@@ -108,7 +111,8 @@ Script GetTechnicalInfo ()
 		String sType,
 		String sTexto
 		
-	WindowName = GetWindowName (GetFocus ())
+WindowName = GetWindowName (GetFocus ())
+WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 ClassMainWindow = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	ClassWindow = GetWindowClass (GetFocus ())
 	sClassName = GetObjectClassName(0)
@@ -120,6 +124,7 @@ ClassMainWindow = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	Pause()
 	If IsSameScript () == 0 then
 		SayString (msgDiagWinName + WindowName)
+		SayString (msgMainWinName + WindowTitle)
 	SayString(msgDiagMainClass + ClassMainWindow)
 		SayString(msgDiagWinClass + ClassWindow)
 		; Comprueba si el nombre de la clase del objeto es válido o está vacío.
@@ -143,7 +148,9 @@ ClassMainWindow = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 		EndIf
 		UserBufferClear()
 		SayFormattedMessage(OT_User_Buffer, msgTechnicalInfo)		
-		UserBufferAddText (cScBufferNewLine)		SayFormattedMessage(OT_User_Buffer, msgDiagWinName + WindowName)
+		UserBufferAddText (cScBufferNewLine)
+		SayFormattedMessage(OT_User_Buffer, msgDiagWinName + WindowName)
+		SayFormattedMessage(OT_User_Buffer, msgMainWinName + WindowTitle)
 		SayFormattedMessage(OT_User_Buffer, msgDiagMainClass + ClassMainWindow)
 		SayFormattedMessage(OT_User_Buffer, msgDiagWinClass + ClassWindow)
 		SayFormattedMessage(OT_User_Buffer, msgDiagClassIs + sClassName)
@@ -165,7 +172,7 @@ Script CheckMuteStatus ()
 
 	Let Counter = 0
 	Let MaxCount = 9
-	WindowTitle = GetWindowName (GetFocus ())
+	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 	TextControl = GetControlName ()
 
 	If StringContains(WindowTitle, WebexWindowTitle) != 0 || StringContains(WindowTitle, DiagnosticTitle) != 0 || StringContains(WindowTitle, CiscoTitle) != 0 || StringContains(WindowTitle, HelpTitle) != 0 || StringContains(WindowTitle, SettingsTitle) != 0 || StringContains(WindowTitle, MenuTitle) != 0 || StringIsBlank (WindowTitle) Then
@@ -261,7 +268,7 @@ Script ActivateCheckFirstButton ()
 
 	Let Counter = 0
 	Let MaxCount = 9
-	WindowTitle = GetWindowName (GetFocus ())
+	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 	WindowClass = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	sClassName = GetObjectClassName(0) 
 	sID = GetObjectAutomationId(0)
@@ -337,7 +344,8 @@ Script ActivateTransferNowButton ()
 
 	Let Counter = 0
 	Let MaxCount = 9
-	WindowTitle = GetWindowName (GetFocus ())
+;	WindowTitle = GetWindowName (GetFocus ()) ;Descartada por actualización de Webex de 17 de febrero de 2026
+	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 	WindowClass = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	sClassName = GetObjectClassName(0) 
 	sID = GetObjectAutomationId(0)
@@ -385,7 +393,7 @@ Script ActivateTransferNowButton ()
 		TextControl = GetControlName ()
 		ValueComparison = StringContains(TextControl, TransferNowButton) 
 		While ValueComparison == 0 && Counter != MaxCount
-			; Se lanza una búsqueda secuencial que se mantiene mientras ue no se encuentre parte de la etiqueta del botón Transferir ahora o se alcance el máximo de búsquedas permitidas
+			; Se lanza una búsqueda secuencial que se mantiene mientras que no se encuentre parte de la etiqueta del botón Transferir ahora o se alcance el máximo de búsquedas permitidas
 			SpeechOff ()
 			Let Counter = Counter + 1
 			TypeKey("Tab")
@@ -492,7 +500,7 @@ Script ActivateEraseEntryButton ()
 	Let Counter = 0
 	Let MaxCount = 9
 
-	WindowTitle = GetWindowName (GetFocus ())
+	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 	WindowClass = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	sClassName = GetObjectClassName(0)
 	sID = GetObjectAutomationId(0)
@@ -530,9 +538,7 @@ Script ActivateEraseEntryButton ()
 					SpeechOn ()
 					SayString (msgErrTextEntryNoFound)
 					BrailleMessage (msgErrTextEntryNoFound)
-					SpeechOff ()
 					TypeKey ("Control+F")
-					SpeechON ()
 					Return
 				EndIf
 				; Si el botón que se encuentra a continuación es el de borrar entrada se activa.
@@ -674,83 +680,93 @@ Script ActivateKeyboardButton ()
 	Let Counter = 0
 	Let MaxCount = 18
 
-	WindowTitle = GetWindowName (GetFocus ())
+	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 	sID = GetObjectAutomationId(0)
 	TextControl = GetControlName ()
-
-	; Si el foco está en un objeto de la barra de control de una llamada o en el área de Vídeo y contenido,
-	; es porque en primer plano hay una ventana de llamada en curso,
-	; y por tanto el botón Teclado está disponible.
-	If StringContains(WindowTitle, ControlBarTitle) != 0 || StringContains(WindowTitle, VideoPadTitle) != 0 then
-		; Se comprueba si se está sobre el botón Silenciar o Desactivar silencio,
-		; y si es así, se tabula 4veces para avanzar rápidamente hasta el botón del teclado
-		If StringContains (TextControl, MuteButton) != 0 Then
-			SpeechOff ()
-			TypeKey("Tab")
-			TypeKey("Tab")
-			TypeKey("Tab")
-			TypeKey("Tab")
-			Pause ()
-			sID = GetObjectAutomationId(0)
-			TextControl = GetControlName ()
-			SpeechOn ()
-		EndIf
-
-		; se comprueba si ya se está sobre el botón para abrir el teclado
-		If sID == AutomationID_Keyboard then
-			; y si es así se activa el botón.
-			TypeKey ("Space")
-			SayString (msgActKeyboard)
-			BrailleMessage (msgActKeyboard)
+	If StringContains(WindowTitle, WebexWindowTitle) != 0 || StringContains(WindowTitle, DiagnosticTitle) != 0 || StringContains(WindowTitle, CiscoTitle) != 0 || StringContains(WindowTitle, HelpTitle) != 0 || StringContains(WindowTitle, SettingsTitle) != 0 || StringContains(WindowTitle, MenuTitle) != 0 || StringIsBlank (WindowTitle) Then
+		; Si en el título de la ventana enfocada aparece "Webex", Diagnóstico", "Configura", "Menú", "Ayuda", "Cisco",, no es la ventana de una llamada activa, por que si fuese así, el título sería el número del llamante, o el nombre del mismo si está entre los contactos registrados. 
+		SayString (msgErrNoCallWindow)
+		BrailleMessage (msgErrNoCallWindow)
+		Return
+	Else
+		; Si el título de la ventana no es Webex
+		If StringContains(WindowTitle, DialogTitle) != 0 || StringContains(WindowTitle, ResultsListViewTitle) != 0 Then
+			; Si en el texto del título de la ventana aparece "diálogo" o "Viendo lista" significa que el diálogo de transferencia o algún 
+			; otro (de combinar llamadas en conferencia, por ejemplo) está abierto, y que por tanto, no está disponible el botón que despliega el teclado
+			SayString (msgErrKeyboardDialogBlock)
+			BrailleMessage (msgErrKeyboardDialogBlock)
 			Return
 		Else
-			; Si no se está sobre el botón para abrir el teclado,
-			; se lanza una búsqueda secuencial con tabulador
-			; hasta que se encuentre o se supere un cierto número de búsquedas. 
-			While sID != AutomationID_Keyboard && Counter != MaxCount
+			; Si el diálogo de transferencia o algún otro cuadro de diálogo no está abierto
+			; Se comprueba si se está sobre el botón Silenciar o Desactivar silencio,
+			; y si es así, se tabula 4veces para avanzar rápidamente hasta el botón del teclado
+			If StringContains (TextControl, MuteButton) != 0 Then
 				SpeechOff ()
+				TypeKey("Tab")
+				TypeKey("Tab")
+				TypeKey("Tab")
 				TypeKey("Tab")
 				Pause ()
 				sID = GetObjectAutomationId(0)
 				TextControl = GetControlName ()
-				Let Counter = Counter + 1
 				SpeechOn ()
-				If Counter == 9 then
-					SayString (msgSearchingKeyboard)
-					BrailleMessage (msgSearchingKeyboard)
-				EndIf
-				; Se comprueba si se está sobre el botón Silenciar o Desactivar silencio,
-				; y si es así, se tabula 4veces para avanzar rápidamente hasta el botón del teclado
-				If StringContains (TextControl, MuteButton) != 0 Then
-					SpeechOff ()
-					TypeKey("Tab")
-					TypeKey("Tab")
-					TypeKey("Tab")
-					TypeKey("Tab")
-					Pause ()
-					sID = GetObjectAutomationId(0)
-					TextControl = GetControlName ()
-					SpeechOn ()
-				EndIf
+			EndIf
 
-			EndWhile
-			; Si se localiza el botón que abre el teclado se activa.
+			; se comprueba si ya se está sobre el botón para abrir el teclado
 			If sID == AutomationID_Keyboard then
-				SpeechOn ()
+				; y si es así se activa el botón.
 				TypeKey ("Space")
 				SayString (msgActKeyboard)
 				BrailleMessage (msgActKeyboard)
 				Return
-			EndIf
-			; Si se alcanza el máximo de búsquedas secuenciales prefijado,
-			; es porque algo ha pasado y no se ha podido localizar el botón del teclado
-			If Counter == MaxCount then
-				SayString(msgErrKeyboardNotFound)
-				BrailleMessage (msgErrKeyboardNotFound)
-				Return
-			EndIf
+			Else
+				; Si no se está sobre el botón para abrir el teclado,
+				; se lanza una búsqueda secuencial con tabulador
+				; hasta que se encuentre o se supere un cierto número de búsquedas. 
+				While sID != AutomationID_Keyboard && Counter != MaxCount
+					SpeechOff ()
+					TypeKey("Tab")
+					Pause ()
+					sID = GetObjectAutomationId(0)
+					TextControl = GetControlName ()
+					Let Counter = Counter + 1
+					SpeechOn ()
+					If Counter == 9 then
+						SayString (msgSearchingKeyboard)
+						BrailleMessage (msgSearchingKeyboard)
+					EndIf
+					; Se comprueba si se está sobre el botón Silenciar o Desactivar silencio,
+					; y si es así, se tabula 4veces para avanzar rápidamente hasta el botón del teclado
+					If StringContains (TextControl, MuteButton) != 0 Then
+						SpeechOff ()
+						TypeKey("Tab")
+						TypeKey("Tab")
+						TypeKey("Tab")
+						TypeKey("Tab")
+						Pause ()
+						sID = GetObjectAutomationId(0)
+						TextControl = GetControlName ()
+						SpeechOn ()
+					EndIf
+
+				EndWhile
+				; Si se localiza el botón que abre el teclado se activa.
+				If sID == AutomationID_Keyboard then
+					SpeechOn ()
+					TypeKey ("Space")
+					SayString (msgActKeyboard)
+					BrailleMessage (msgActKeyboard)
+					Return
+				EndIf
+				; Si se alcanza el máximo de búsquedas secuenciales prefijado,
+				; es porque algo ha pasado y no se ha podido localizar el botón del teclado
+				If Counter == MaxCount then
+					SayString(msgErrKeyboardNotFound)
+					BrailleMessage (msgErrKeyboardNotFound)
+					Return
+				EndIf
 					
-		EndIf  ; Fin de la condición de estar o no directamente sobre el botón para abrir el teclado de marcación
-	EndIf ; Fin de la condición de que se esté en una ventana de llamada
-		
+			EndIf  ; Fin de la condición de estar o no directamente sobre el botón para abrir el teclado de marcación
+		EndIf ; Fin de la condición de que se esté en una ventana de llamada
+	EndIf ; Fin de la condición que la ventana de Webex u otras que no son de llamadas estén abiertas.  
 EndScript
