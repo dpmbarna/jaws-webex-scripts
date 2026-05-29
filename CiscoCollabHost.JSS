@@ -1,4 +1,4 @@
-	; Webex script file versión v1.2
+	; Webex script file versión v1.3
 	; Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
 	; * Versión 1.0 terminada el 30/01/2026
 	; * Versión 1.1 terminada el 05/02/2026: 
@@ -7,12 +7,21 @@
 ; se modifican los parámetros de la función GetwindowName en todos los scripts para que recoja correctamente el nombre de la ventana enfocada en cada momento
 ; ya que, como consecuencia de una actualización de Webex en esas fechas, varios scripts dejaron de funcionar correctamente,
 ; y se adapta parte del código del script ActivateKeyboardButton para que siga funcionando.
-	
-	; Los controles que activan estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
+; * Versión 1.3 terminada el 29/05/2026;
+; se cambian los códigos de tipos de ventana de la aplicación para adecuarlos a los de la actualización de Webex de esas fechas
+; para que sigan funcionando correctamente varios scripts
+; y se modifica la primera parte del script ActivateEraseEntryButton porque a partir de ahora
+; el automationID de todos los objetos de la ventana principal de Webex es el mismo,
+; y por tanto, ya no se puede usar este código para discriminar entre objetos y 
+; hay que recurrir al texto del nombre del control para ello.
+; Además, se añade un nuevo script para llevar el foco a la lista del historial de llamadas,
+; cuando se está en la ventana principal de webex y no hay ningún menú desplegado en ese momento.
+
+	; Los controles de Webex que activan estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
 	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
 	; y además, algunos objetos ni siquiera Tienen un automation ID Único o Con alguna etiqueta incorporada.
 	
-	; Estos scripts se han creado y probado en una Edición de Webex en español con un número de teléfono asociado en el que hay una cola de llamadas vinculada y que forma parte de un grupo de extensiones,
+	; Estos scripts se han creado y probado en una Edición actualizada a la última versión de Webex en español con un número de teléfono asociado en el que hay una cola de llamadas vinculada y que forma parte de un grupo de extensiones,
 	; en la que el dock de llamadas (la ventana de llamadas con funciones extendidas) está desactivado desde la configuración de la aplicación
 	; porque de esta forma se facilita la captura por parte de Jaws de la información que aparece en primer plano o que se abre al contestar una llamada
 	; (con el dock activado no se logra llevar el foco a esa ventana de ninguna forma ni Jaws consigue acceder a su información a no ser que se haga clic con el ratón sobre ella),
@@ -51,23 +60,26 @@ ContactProfileTitle = "Perfil",
 ControlBarTitle = "Barra",
 VideoPadTitle = "Vídeo y ",
 ;classes
-	Class_Webex = "Qt653QWindowIcon",
-Class_Dialog = "Qt653QWindowToolSaveBits",
+	Class_Webex = "Qt683QWindowIcon",
+Class_Dialog = "Qt683QWindowToolSaveBits",
 CancelDialogClass = "VectorButton",
 EraseEntryClass = "WSvgPushButton",
-EntryEditClass = "WLineEdit",	
+EntryEditClass = "WLineEdit",
+CallHistoryListClass = "CallHistoryItem",	
 ;Automation ID's
-AutomationID_MainWindowObject = "MainWindow.ConversationsForm.topLevelStack.mainAreasWidget.appl",
+AutomationID_MainWindowObject = "SparkApp.MainWindow.ConversationsForm.topLevelStack.mainAreasWi",
 AutomationID_Keyboard = "Main_CallStripButton_Keypad",
 AutomationID_ResultsList = "focusAnchorItem",
 AutomationID_MuteButton = "Main_CallStripButton_Audio",
 AutomationID_ResumeButton = "Main_CallStripButton_Resume",
 AutomationID_TransferButton = "Main_CallStripButton_Transfer",
 AutomationID_ClearSearch = "InputBoxContainer.clearSearchBoxButton",
+AutomationID_CallHistoryList = "callHistoryView.",
 ; Control Names and Texts		
+JoinDeviceButton = "Conectar",
 TransferNowButton = "ransfer",
 CheckfirstButton = "onsult",
-EraseEntryButton = "Borrar entrada",
+EraseEntryButton = "orrar",
 CancelTransferButton = "Cancel",
 MuteButton = "ilenci",
 ResumeButton = "eanuda",
@@ -102,8 +114,8 @@ EndScript
 
 Script GetTechnicalInfo ()
 	Var
-			String WindowName,
-					String ClassMainWindow,
+		String WindowName,
+		String ClassMainWindow,
 		String ClassWindow,
 		string sClassName,
 		string sID,
@@ -111,9 +123,9 @@ Script GetTechnicalInfo ()
 		String sType,
 		String sTexto
 		
-WindowName = GetWindowName (GetFocus ())
-WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
-ClassMainWindow = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
+	WindowName = GetWindowName (GetFocus ())
+	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
+	ClassMainWindow = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	ClassWindow = GetWindowClass (GetFocus ())
 	sClassName = GetObjectClassName(0)
 	sID = GetObjectAutomationId(0)
@@ -492,10 +504,11 @@ EndScript
 Script ActivateEraseEntryButton ()
 	Var
 		String WindowClass, 
-		String sID,
+		String sName,
 		Int Counter,
 		Int MaxCount,
-		string sClassName 
+		string sClassName,
+		Int ValueComparison 
 
 	Let Counter = 0
 	Let MaxCount = 9
@@ -503,10 +516,10 @@ Script ActivateEraseEntryButton ()
 	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 	WindowClass = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	sClassName = GetObjectClassName(0)
-	sID = GetObjectAutomationId(0)
+	sName = GetControlName()
 
-	If WindowClass == Class_Webex Then
-	; Si el nombre del tipo de  ventana es la genérica de la aplicación,
+		If WindowClass == Class_Webex Then
+		; Si el nombre del tipo de  ventana es la genérica de la aplicación,
 	; se comprueba que no está abierta una ventana con información del perfil de algún contacto
 		If WindowTitle == ContactProfileTitle then
 			SayString (msgerrProfBlock)
@@ -514,69 +527,69 @@ Script ActivateEraseEntryButton ()
 			Return
 		EndIf
 		; Si la ventana principal de Webex está en primer plano o una de lista de resultados de búsqueda,
-		If WindowTitle == WebexWindowTitle || StringContains(WindowTitle, ResultsListViewTitle) != 0 then
-			; se comprueba si ya se está sobre el botón de borrar la entrada de la búsqueda general del programa,
-			If sID == AutomationID_ClearSearch then
-				; y si es así se activa el botón.
+		If WindowTitle == WebexWindowTitle || StringIsBlank (WindowTitle) || StringContains(WindowTitle, ResultsListViewTitle) != 0 then
+			; se comprueba si ya se está sobre el botón de borrar la búsqueda de la ventana general del programa,
+			If StringContains (sName, EraseEntryButton) != 0 Then
+							; y si es así se activa el botón.
 				TypeKey ("Space")
 				SayString (msgActErased)
 				BrailleMessage (msgActErased)
 				Return
 			Else
-				; Si no se está sobre el botón para borrar la entrada,
+				; Si no se está sobre el botón para borrar la búsqueda,
 				; se va a buscar desde el cuadro de edición de búsqueda,
 				; al que se llega pulsando Control + f
 				SpeechOff ()
 				TypeKey ("Control+F")
 				TypeKey ("tab")
 				Pause ()
-				sID = GetObjectAutomationId(0)
-		; Y si el siguiente objeto a él es uno de los de la ventana principal,
+				sName = GetControlName()
+				; Y si el siguiente objeto a él es el botón "Conectar a un dispositivo",
 				; es porque no hay ninguna búsqueda desplegada,
-				; y por tanto, ningún botón de borrar entrada disponible.
-				If sID == AutomationID_MainWindowObject then
+				; y por tanto, ningún botón para borrarla disponible.
+				If StringContains(sName, JoinDeviceButton) != 0 Then
 					SpeechOn ()
 					SayString (msgErrTextEntryNoFound)
 					BrailleMessage (msgErrTextEntryNoFound)
 					TypeKey ("Control+F")
 					Return
 				EndIf
-				; Si el botón que se encuentra a continuación es el de borrar entrada se activa.
-				If sID == AutomationID_ClearSearch then
+				; Si el botón que se encuentra a continuación es el de borrar búsqueda se activa.
+				If StringContains (sName, EraseEntryButton) != 0 Then
 					SpeechOn ()
 					TypeKey ("Space")
 					SayString (msgActErased)
 					BrailleMessage (msgActErased)
 					Return
 				EndIf
-				; Y si no lo es, se lanza una búsqueda secuancial
-				; hasta que se encuentre un objeto de la ventana principal (no hay botón para borrar la entrada),
-				; el botón borrar entrada, o se supere un cierto número de búsquedas. 
-				While sID != AutomationID_MainWindowObject && sID != AutomationID_ClearSearch && Counter != MaxCount
+				; Y si no lo es, se lanza una búsqueda secuencial
+				; hasta que se encuentre el botón Conectar a un dispositivo" (no hay botón para borrar la entrada),
+				; el botón borrar búsqueda, o se supere un cierto número de búsquedas. 
+				While StringContains (sName, EraseEntryButton) == 0 && StringContains (sName, JoinDeviceButton) == 0 && Counter != MaxCount
 					SpeechOff ()
 					TypeKey("Tab")
 					Pause ()
-					sID = GetObjectAutomationId(0)
+					sName = GetControlName()
 					Let Counter = Counter + 1
 					SpeechOn ()
 				EndWhile
-				; Si se localiza el botón borrar entrada se activa.
-				If sID == AutomationID_ClearSearch then
+				; Si se localiza el botón borrar búsqueda se activa.
+				If StringContains (sName, EraseEntryButton) != 0 then
 					SpeechOn ()
 					TypeKey ("Space")
 					SayString (msgActErased)
 					BrailleMessage (msgActErased)
 					Return
 				EndIf
-				; Y si se localiza un objeto de la ventana principal (se ha superado el área de búsqueda sin localizar el botón de borrar entrada),
+				; Y si se localiza el botón "Conectar a un dispositivo" (se ha superado el área de búsqueda sin localizar el botón de borrarla),
 				; o se alcanza el máximo de búsquedas secuenciales indicado, se informa de ello.
-				If sID == AutomationID_MainWindowObject || Counter == MaxCount then
+				If StringContains (sName, JoinDeviceButton) != 0 || Counter == MaxCount then
 					SayString(msgErrEraseNotFound)
 					BrailleMessage (msgErrEraseNotFound)
 					Return
 				EndIf
 					
-			EndIf; Fin de la condición de estar o no directamente sobre un botón de Cborrar entrada.
+			EndIf; Fin de la condición de estar o no directamente sobre un botón de Cborrar búsqueda.
 		EndIf ; Fin de la condición de estar en la ventana principal de Webex o en una de resultados de búsqueda.
 	EndIf ; Fin de la condición de que se esté en una ventana con el nombre de clase genérico del programa.
 	
@@ -769,4 +782,79 @@ Script ActivateKeyboardButton ()
 			EndIf  ; Fin de la condición de estar o no directamente sobre el botón para abrir el teclado de marcación
 		EndIf ; Fin de la condición de que se esté en una ventana de llamada
 	EndIf ; Fin de la condición que la ventana de Webex u otras que no son de llamadas estén abiertas.  
+EndScript
+
+
+Script GetHistorialList ()
+Var
+		string sID,
+		String sClassObject,
+		Int Counter,
+		Int MaxCount
+
+	Let Counter = 0
+	Let MaxCount = 18
+
+	sClassObject = GetObjectClassName(0)	
+	sID = GetObjectAutomationId(0)
+
+	; Como todos los objetos de la ventanan principal de Webex han pasado a tener el mismo AutomationID a partir de la actualización de mayo de 2026,
+	; excepto los relativos al historial de llamadas, que comparten un mismo prefijo,
+	; por ese código de los objetos se puede detectar si se está en la ventana principal o no.
+			If StringContains (sID, AutomationID_MainWindowObject) != 0 || StringContains (sID, AutomationID_CallHistoryList) != 0 Then
+		;Si se está sobre un objeto de la ventana principal, se lleva el foco al cuadro de búsqueda y de ahí se retrocede directamente hasta la lista del historial
+		SpeechOff ()
+		TypeKey ("Control+F")
+		TypeKey ("shift + tab")
+		TypeKey ("shift + tab")
+		TypeKey ("shift + tab")
+		TypeKey ("shift + tab")
+		TypeKey ("shift + tab")
+		Pause ()
+		SpeechOn ()				
+		sClassObject = GetObjectClassName(0)	
+			If StringContains (sClassObject, CallHistoryListClass) != 0 Then
+			; Si todo ha ido bien se habrá alcanzado la lista del historial, y si es así (se sabe por parte del nombre de su clase) se anuncia
+			SayString (msgGetCallHistoryList)
+			BrailleMessage (msgGetCallHistoryList)
+			Return
+		Else
+			; Si no se está sobre el historial de llamadas (la distibución de los objetos de la ventana principal no es la misma que en el programa que se ha usado para hacer estos scripts),
+			; se lanza una búsqueda secuencial con tabulador
+			; hasta que se encuentre o se supere un cierto número de búsquedas. 
+			While StringContains (sClassObject, CallHistoryListClass) == 0 && Counter != MaxCount
+				SpeechOff ()
+				TypeKey("Tab")
+				Pause ()
+				sClassObject = GetObjectClassName(0)	
+				Let Counter = Counter + 1
+				SpeechOn ()
+				If Counter == 9 then
+					SayString (msgSearchingCallHistoryList)
+					BrailleMessage (msgSearchingCallHistoryList)
+				EndIf
+			EndWhile
+			; Si se localiza la lista del historial se anuncia.
+			If StringContains (sClassObject, CallHistoryListClass) != 0 Then
+				SpeechOn ()
+				SayString (msgGetCallHistoryList)
+				BrailleMessage (msgGetCallHistoryList)
+				Return
+			EndIf
+			; Si se alcanza el máximo de búsquedas secuenciales prefijado,
+			; es porque algo ha pasado y no se ha podido localizar el historial de llamadas.
+			If Counter == MaxCount then
+				SayString(msgErrCallHistoryListNotFound)
+				BrailleMessage (msgErrCallHistoryListNotFound)
+				Return
+			EndIf
+		EndIf ; Fin de la condición de estar el foco sobre la lista del historial de llamadas. 
+	Else
+		; Si el objeto que tiene el foco no es uno de la ventana principal o hay algún menú desplegado en ese momento,
+		; no se puede acceder a la lista del historial de llamadas, y por tanto, se informa de ello. 
+		SayString (msgNoCallHistoryListWindow)
+		BrailleMessage (msgNoCallHistoryListWindow)
+		Return
+	EndIf ; Fin de la condición de estar en un objeto de la ventana principal
+
 EndScript

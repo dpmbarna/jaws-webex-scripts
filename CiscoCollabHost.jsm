@@ -13,17 +13,21 @@ Guía de Comandos Webex
 Ayuda de Scripts para Webex
 
 REQUISITOS OPERATIVOS:
+- El programa debe estar actualizado a su última versión. 
 - La ventana de llamadas debe estar seleccionada (Control + 4).
 - El Dock de llamadas debe estar DESACTIVADO.
 
+COMANDOS PARA LA LA VENTANA PRINCIPAL DE WEBEX:
+- Para llevar el foco al cuadro de edición que se usa para realizar una búsqueda o hacer una llamada pulsa Control + f.  
+- Para activar el botón Borrar búsqueda (Limpia dicho cuadro de edición) pulsa %KeyFor(ActivateEraseEntryButton).
+- Para llevar el foco a la lista del historial de llamadas pulsa %KeyFor(GetHistorialList).
+ 
 COMANDOS PARA EL DIÁLOGO DE TRANSFERENCIA:
 - Para activar el botón Transferir ahora (Realiza la transferencia directa o ciega) pulsa %KeyFor(ActivateTransferNowButton).
 - Para activar el botón Consultar primero (Permite hablar con el destino antes de transferir) pulsa %KeyFor(ActivateCheckfirstButton).
 
-COMANDOS PARA DIÁLOGOS DE TRANSFERENCIA Y CONFERENCIA, Y PARA LA BÚSQUEDA EN LA VENTANA PRINCIPAL DE WEBEX:
+COMANDOS PARA DIÁLOGOS DE TRANSFERENCIA Y CONFERENCIA:
 - Para activar el botón Borrar entrada (Limpia el cuadro de edición del número) pulsa %KeyFor(ActivateEraseEntryButton).
-Este comando también se puede usar para borrar la entrada de una búsqueda o marcaje en la ventana principal del programa,
-a cuyo cuadro de edición se puede acceder pulsando Control + f.
 - Para activar el botón Cancelar (Aborta la operación actual y cierra el diálogo) pulsa %KeyFor(ActivateCancelButton).
 
 OTROS COMANDOS ÚTILES DURANTE UNA LLAMADA:
@@ -61,7 +65,7 @@ La Clase de ventana del foco es:
 @@
 @msgDiagMainClass
 La Clase de ventana principal es:  
-@@
+@@	
 @msgDiagErrNoClass
 Error: No se encontró una Clase de Control para este control.
 @@
@@ -121,6 +125,13 @@ Abriendo el teclado de marcación
 @msgSearchingKeyboard
 Buscando el teclado
 @@
+@msgGetCallHistoryList
+Historial de llamadas
+@@
+@msgSearchingCallHistoryList
+Buscando el historial de llamadas
+@@
+
 	; Mensajes de acciones frustradas
 @msgErrNoCallWindow
 No está en primer plano una ventana de llamada
@@ -173,4 +184,11 @@ No se ha localizado el botón que abre el teclado de marcación
 @msgErrKeyboardDialogBlock
 Hay algún cuadro de diálogo enfocado ahora y el botón que despliega el teclado no está disponible de momento
 @@
+@msgNoCallHistoryListWindow
+La ventana que está en primer plano no es la que contiene el historial de llamadas o hay algún menú desplegado, o la ventana principal ha cambiado de AutomationID
+@@
+@msgErrCallHistoryListNotFound
+No se ha localizado la lista del historial de llamadas
+@@
+
 EndMessages
