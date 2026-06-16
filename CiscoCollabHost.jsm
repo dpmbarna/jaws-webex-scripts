@@ -23,8 +23,9 @@ COMANDOS PARA LA LA VENTANA PRINCIPAL DE WEBEX:
 - Para llevar el foco a la lista del historial de llamadas pulsa %KeyFor(GetHistorialList).
  
 COMANDOS PARA EL DIÁLOGO DE TRANSFERENCIA:
-- Para activar el botón Transferir ahora (Realiza la transferencia directa o ciega) pulsa %KeyFor(ActivateTransferNowButton).
 - Para activar el botón Consultar primero (Permite hablar con el destino antes de transferir) pulsa %KeyFor(ActivateCheckfirstButton).
+- Para activar el botón Transferir ahora (Realiza la transferencia directa o ciega) o para completar una transferencia con consulta pulsa %KeyFor(ActivateTransferNowButton).
+Si al accionar este comando para completar una transferencia con consulta, esta no es completada (en ocasiones, falla el script por problemas con el buffer de memoria de Webex si el comando se usa cuando ya se está al habla con la persona de destino), se puede pulsar dos veces rápidamente para tratar de completarla salvando este problema.
 
 COMANDOS PARA DIÁLOGOS DE TRANSFERENCIA Y CONFERENCIA:
 - Para activar el botón Borrar entrada (Limpia el cuadro de edición del número) pulsa %KeyFor(ActivateEraseEntryButton).

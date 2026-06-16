@@ -1,4 +1,4 @@
-	; Webex script file versión v1.3
+	; Webex script file versión v1.4
 	; Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
 	; * Versión 1.0 terminada el 30/01/2026
 	; * Versión 1.1 terminada el 05/02/2026: 
@@ -7,7 +7,7 @@
 ; se modifican los parámetros de la función GetwindowName en todos los scripts para que recoja correctamente el nombre de la ventana enfocada en cada momento
 ; ya que, como consecuencia de una actualización de Webex en esas fechas, varios scripts dejaron de funcionar correctamente,
 ; y se adapta parte del código del script ActivateKeyboardButton para que siga funcionando.
-; * Versión 1.3 terminada el 29/05/2026;
+; * Versión 1.3 terminada el 29/05/2026:
 ; se cambian los códigos de tipos de ventana de la aplicación para adecuarlos a los de la actualización de Webex de esas fechas
 ; para que sigan funcionando correctamente varios scripts
 ; y se modifica la primera parte del script ActivateEraseEntryButton porque a partir de ahora
@@ -16,12 +16,26 @@
 ; hay que recurrir al texto del nombre del control para ello.
 ; Además, se añade un nuevo script para llevar el foco a la lista del historial de llamadas,
 ; cuando se está en la ventana principal de webex y no hay ningún menú desplegado en ese momento.
+; * Versión 1.3.1 terminada el 03/06/2026:
+; se revisa, se añaden  y se Corrigen algunos mensajes  informativos del script ActivateTransferNowButton,
+; y se completa y mejora su argumentación para que quede más clara la función de cada bloque de comandos dentro del script.
+;* Versión 1.4 terminada el 15/06/2026
+; Se modifica el AutomationId del botón que despliega el teclado de marcación durante una llamada,
+; para que el script ActivateKeyboardButton vuelva a funcionar después de la última actualización de Webex.
+; También se modifica el script ActivateTransferNowButton para tratar de solucionar con una segunda búsqueda alternativa,
+; que se activa pulsando dos veces rápidamente la tecla rápida del script,
+; un problema que se produce algunas veces en la primera transferencia que se realiza en cada sesión de Webex cuando se pretende completar una trasferencia 
+; habiendo descolgado ya la persona de destino en su dispositivo.
+; En esta circunstancia, aunque el script funciona correctamente y detecta y supuestamente activa el botón completar transferencia, parece ser que Webex no ha actualizado aún su buffer de memoria,
+; y tal activación no se produce, por lo que la llamada sigue sin ser transferida a pesar del mensaje lanzado por el script de confirmación, 
+; y esta hay que transferirla buscando manualmente con shift + F6 dicho botón y activarlo con barra espaciadora. 
+; Finalmente, se  añade en la ayuda de comandos de los scripts, la información referente a cómo completar una transferencia iniciada con el botón "Consultar Primero".
 
 	; Los controles de Webex que activan estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
 	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
 	; y además, algunos objetos ni siquiera Tienen un automation ID Único o Con alguna etiqueta incorporada.
 	
-	; Estos scripts se han creado y probado en una Edición actualizada a la última versión de Webex en español con un número de teléfono asociado en el que hay una cola de llamadas vinculada y que forma parte de un grupo de extensiones,
+	; Estos scripts se han creado y probado en una Edición actualizada a la última versión disponible de Webex en español con un número de teléfono asociado en el que hay una cola de llamadas vinculada y que forma parte de un grupo de extensiones,
 	; en la que el dock de llamadas (la ventana de llamadas con funciones extendidas) está desactivado desde la configuración de la aplicación
 	; porque de esta forma se facilita la captura por parte de Jaws de la información que aparece en primer plano o que se abre al contestar una llamada
 	; (con el dock activado no se logra llevar el foco a esa ventana de ninguna forma ni Jaws consigue acceder a su información a no ser que se haga clic con el ratón sobre ella),
@@ -68,7 +82,7 @@ EntryEditClass = "WLineEdit",
 CallHistoryListClass = "CallHistoryItem",	
 ;Automation ID's
 AutomationID_MainWindowObject = "SparkApp.MainWindow.ConversationsForm.topLevelStack.mainAreasWi",
-AutomationID_Keyboard = "Main_CallStripButton_Keypad",
+AutomationID_Keyboard = "SparkApp.CallControlBar.Main_CallStripButton_Keypad",
 AutomationID_ResultsList = "focusAnchorItem",
 AutomationID_MuteButton = "Main_CallStripButton_Audio",
 AutomationID_ResumeButton = "Main_CallStripButton_Resume",
@@ -349,14 +363,13 @@ Script ActivateTransferNowButton ()
 		String WindowClass, 
 		Int Counter,
 		Int MaxCount,
+		Int iFound,
 		String TextControl,
 		String sClassName,
 		String sID,
 		Int ValueComparison
 
-	Let Counter = 0
-	Let MaxCount = 9
-;	WindowTitle = GetWindowName (GetFocus ()) ;Descartada por actualización de Webex de 17 de febrero de 2026
+	;	WindowTitle = GetWindowName (GetFocus ()) ;Descartada por actualización de Webex de 17 de febrero de 2026
 	WindowTitle = GetWindowName (GetAppMainWindow(GetCurrentWindow ()))
 	WindowClass = GetWindowClass (GetAppMainWindow(GetCurrentWindow ()))
 	sClassName = GetObjectClassName(0) 
@@ -375,14 +388,17 @@ Script ActivateTransferNowButton ()
 		; Si hay un cuadro de diálogo en primer plano con el nombre de la clase de ventana que suelen tener los cuadros de diálogo en Webex (se han excluido varios por su 
 		; título en la condición anterior).
 		If StringContains(WindowTitle, ConferenceDialogTitle) != 0 Then
+		; Si es el de conferencia se informa de ello y de que no tiene botón para transferir ahora.
 			SayString (msgErrConfBlock)
 			BrailleMessage (msgErrConfBlock)
 			Return
 		EndIf
 		; Si no es el de conferencia el que está abierto
+		; *** PARTE PARA ACTIVAR EL BOTÓN TRASFERIR AHORA DURANTE UNA TRANSFERENCIA *** 
 		If sID == AutomationID_ResultsList || sClassName == EntryEditClass Then
 			; Se detecta si el foco está en el cuadro de edición donde se escribe el numero a donde se va a transferir o en la lista de resultados de búsqueda.
-			; Para ello, se recurre al nombre de la clase del primero o al automationID del segundo.
+			; Para ello, se recurre al nombre de la clase del primero o al automationID del segundo,
+			; y si es así se avanza rápidamente con tabulador ahsta la posición habitual del botón Transferir ahora. 
 			SpeechOff ()
 			TypeKey("Tab")
 			TypeKey("Tab")
@@ -404,96 +420,199 @@ Script ActivateTransferNowButton ()
 		; Si por el motivo que sea no se está sobre el botón Transferir ahora porque no se localiza parte de su etiqueta en los nombres de los controles focalizados hasta ese momento,
 		TextControl = GetControlName ()
 		ValueComparison = StringContains(TextControl, TransferNowButton) 
-		While ValueComparison == 0 && Counter != MaxCount
+		Let Counter = 0
+		Let MaxCount = 9
+		Let iFound = 0
+		While iFound == 0 && Counter < MaxCount
 			; Se lanza una búsqueda secuencial que se mantiene mientras que no se encuentre parte de la etiqueta del botón Transferir ahora o se alcance el máximo de búsquedas permitidas
 			SpeechOff ()
-			Let Counter = Counter + 1
 			TypeKey("Tab")
 			Pause ()
 			TextControl = GetControlName ()
 			ValueComparison = StringContains(TextControl, TransferNowButton) 
+			If ValueComparison != 0 Then
+			 Let iFound = 1; Se ha localizado el botón transferir ahora en esta búsqueda secuencial 
+			EndIf
+			
+			Let Counter = Counter + 1
 		EndWhile
-		If ValueComparison  != 0 Then
+		If iFound == 1 Then
 			; Si se ha encontrado algún control con parte de la etiqueta del botón Transferir ahora,
+		; se acttiva y se anuncia
 			SpeechOn ()
 			TypeKey ("Space")
 			SayString (msgActTransferring)
 			BrailleMessage (msgActTransferring)
 			Return
 		Else
+		; Si no se encuentra, se anuncia.
 			SpeechOn ()
 			SayString(msgErrTransferNotFound)
 			BrailleMessage (msgErrTransferNotFound)
 		EndIf
 	Else
+	; *** PARTE PARA COMPLETAR UNA TRANSFERENCIA EN CURSO ***
 		; Si no hay en primer plano ningún diálogo con la clase de ventana típico en esta aplicación, y tampoco se está en alguna otra ventana o menú de los excluidos en la primera condición de este script
 		TextControl = GetControlName ()
 		If StringContains(TextControl, TransferButton) != 0 || StringContains(TextControl, ResumeButton) != 0 || StringContains(TextControl, OnHoldCallState) != 0 Then 
-			; Si se encuentran los botones Transferir o Reanudar, o la etiqueta "espera" en el nombre de los objetos
+			; Si se encuentran los botones Transferir o Reanudar, o la etiqueta "espera" en el nombre de los objetos,
+			; es porque hay una llamada en espera pero no hay ninguna llamada de destino en primer plano,
+			; y se informa de ello, por tanto.
 			SpeechOn ()			
 			SayString (msgErrHoldNoDest)
 			BrailleMessage (msgErrHoldNoDest)
 			SayString (GetControlName ())	
+			BrailleMessage (GetControlName ())	
 			Return
 		EndIf
 		ValueComparison = StringContains(TextControl, CompleteTransferButton) 		
 		If ValueComparison != 0 Then
-			; Si se detecta parte de la etiqueta del botón Completar transferencia en el nombre del objeto focalizado
-			TypeKey ("space")		
-			Pause ()
-			SpeechOn ()
-			Saystring (msgActCompleting)        
-			BrailleMessage (msgActCompleting)
-			Return
-		Else
-			SpeechOff ()
-			; Como no se ha detectado, de momento, que la llamada esté en espera o que el botón Completar Transferencia esté focalizado, se va a buscar con F6 este último.
-			TypeKey ("F6")		
-			Pause ()
-			TextControl = GetControlName ()
-			ValueComparison = StringContains(TextControl, CompleteTransferButton) 
-			MaxCount = 5
-			; Y se compara el texto del objeto que tiene el foco con la etiqueta de Completar transferencia
-			While ValueComparison == 0 && Counter != MaxCount
-				; Mientras no se encuentre un objeto que coincida con parte de la etiqueta del botón Completar transferencia
-				If StringContains(TextControl, TransferButton) != 0 || StringContains(TextControl, ResumeButton) != 0 || StringContains(TextControl, OnHoldCallState) != 0 Then 
-					; Si se encuentran los botones Transferir o Reanudar, o la etiqueta "espera" en el nombre de los objetos
-					SpeechOn ()
-					SayString (msgErrHoldNoFocus)
-					BrailleMessage (msgErrHoldNoFocus)
-					SayString (GetControlName ())
-					Return
-				EndIf
+			; Si se detecta parte de la etiqueta del botón Completar transferencia en el nombre del objeto focalizado,
+			; se activa este y se informa de que se está completando la transferencia, si las teclas rápidas se han pulsado sólo una vez.
+			; así que se evalúa cómo se ha pulsado la tecla rápida
+			If IsSameScript () == 0 Then
+				; 1. Si se ha hecho una pulsación simple
+				TypeKey ("space")		
+				Pause ()
+				SpeechOn ()
+				; SayString ("Directamente sobre botón") (mensaje usado para depurar fallos del script)
+				SayString (msgActCompleting)        
+				BrailleMessage (msgActCompleting)
+				Return
+			Else
+				; 2. Si se ha hecho una pulsación doble, para tratar de buscar de nuevo el cotón completar transferencia
+				; de otra forma teóricamente definitiva
+				Let Counter = 0
+				Let MaxCount = 5 ; Límite de seguridad para no entrar en bucle infinito
+        Let iFound = 0
 				SpeechOff ()
-				Let Counter = Counter + 1
+				While iFound == 0 && Counter < MaxCount
+					TypeKey ("Shift+F6") ; Se retrocede un elemento en la interfaz
+					Pause ()
+					TextControl = GetControlName () ; Se comprueba donde está el foco realmente
+					If StringContains(TextControl, CompleteTransferButton) != 0 Then
+						Let iFound = 1 ; Se ha localizado el botón completar transferencia en esta búsqueda alternativa
+					EndIf
+            
+					Let Counter = Counter + 1
+				EndWhile
+        
+				SpeechOn ()
+        				; Si ha encontrado el botón completar transferencia de forma dinámica, lo activa independientemente de los pasos que haya tomado
+				If iFound == 1 Then
+					TypeKey ("space")
+					Saystring (msgActCompleting)       
+					BrailleMessage (msgActCompleting)
+				Return
+				Else
+					; Si algo ha fallado en la búsqueda alternativa, se informa de que no se ha localizado el botón
+					SayString (msgErrCompleteNotFound) ; Usando tu constante de "No encontrado"
+					BrailleMessage (msgErrCompleteNotFound) ; Usando tu constante de "No encontrado"
+					Return
+				EndIf ; Fin de la condición de que se haya encontrado el botón completar transferencia tras la búsqueda alternativa lanzada con doble pulsación de la tecla rápida
+			EndIf; Fin de la condición de que se haya pulsado una o dos veces la cecla rápida
+
+		Else
+;			SpeechOff ()
+			; Como no se ha detectado, de momento, que la llamada esté en espera o que el botón Completar Transferencia esté focalizado, se va a buscar con F6 este último de forma secuencial.
+			;TypeKey ("F6")		
+			;Pause ()
+			;TextControl = GetControlName ()
+			;ValueComparison = StringContains(TextControl, CompleteTransferButton) 
+			Let Counter = 0
+			Let MaxCount = 5
+			Let iFound = 0
+
+			While iFound == 0 && Counter != MaxCount
+
+				SpeechOff ()
 				TypeKey("F6")
 				Pause ()
 				TextControl = GetControlName ()
 				ValueComparison = StringContains(TextControl, CompleteTransferButton)
-				; Se continúa rotando, obteniendo el nombre de los objetos y comparándolos con el texto común para los estados de silenciar
+				; Mientras no se encuentre un objeto que coincida con parte de la etiqueta del botón Completar transferencia
+				If StringContains(TextControl, TransferButton) != 0 || StringContains(TextControl, ResumeButton) != 0 || StringContains(TextControl, OnHoldCallState) != 0 Then 
+					; Si durante la búsqueda secuencial se encuentran los botones Transferir o Reanudar, o la etiqueta "espera" en el nombre de los objetos,
+					; es porque hay una llamada en espera pero no hay ninguna de destino focalizada,
+					; y por tanto, no se puede completar la transferencia.
+					SpeechOn ()
+					SayString (msgErrHoldNoFocus)
+					BrailleMessage (msgErrHoldNoFocus)
+					SayString (GetControlName ())
+										BrailleMessage (GetControlName ())
+					Return
+				EndIf
+				; Si no se han encontrado las etiquetas mencionadas, se continúa rotando, obteniendo el nombre de los objetos y comparándolos con el texto del botón completar transferencia.
+				If ValueComparison != 0 Then
+					Let iFound = 1
+				EndIf
+				Let Counter = Counter + 1
 			EndWhile
-			If ValueComparison != 0 Then
-				; Si se detecta parte de la etiqueta del botón Completar transferencia en el nombre del objeto focalizado
-				TypeKey ("space")		
-				Pause ()
-				SpeechOn ()
-				Saystring (msgActCompleting)        
-				BrailleMessage (msgActCompleting)
-				Return
-			EndIf
+			If IFound == 1 Then
+				; Si se detecta parte de la etiqueta del botón Completar transferencia en el nombre del objeto focalizado,
+				; se activa y se informa de ello, si la tecla rápida se ha pulsado sólo una vez.
+				; así que se evalúa cómo se ha pulsado la tecla rápida
+				If IsSameScript () == 0 Then
+					; 1. Si se ha hecho una pulsación simple
+					TypeKey ("space")		
+					Pause ()
+					SpeechOn ()
+					; SayString ("Activado tras secuencial") (mensaje usado para depurar fallos del script)
+					SayString (msgActCompleting)        
+					BrailleMessage (msgActCompleting)
+					Return
+				Else
+					; 2. Si se ha hecho una pulsación doble, para tratar de buscar de nuevo el cotón completar transferencia
+					; de otra forma teóricamente definitiva
+					Let Counter = 0
+					Let MaxCount = 5 ; Límite de seguridad para no entrar en bucle infinito
+			Let iFound = 0
+					SpeechOff ()
+					While iFound == 0 && Counter < MaxCount
+						TypeKey ("Shift+F6") ; Se retrocede un elemento en la interfaz
+						Pause ()
+						TextControl = GetControlName () ; Se comprueba donde está el foco realmente
+						If StringContains(TextControl, CompleteTransferButton) != 0 Then
+							Let iFound = 1 ; Se ha localizado el botón completar transferencia en esta búsqueda alternativa
+						EndIf
+            
+						Let Counter = Counter + 1
+					EndWhile
+        
+					SpeechOn ()
+							; Si ha encontrado el botón completar transferencia de forma dinámica, lo activa independientemente de los pasos que haya tomado
+					If iFound == 1 Then
+						TypeKey ("space")
+						Saystring (msgActCompleting)       
+						BrailleMessage (msgActCompleting)
+					Return
+					Else
+						; Si algo ha fallado en la búsqueda alternativa, se informa de que no se ha localizado el botón
+						SayString (msgErrCompleteNotFound) ; Usando tu constante de "No encontrado"
+						BrailleMessage (msgErrCompleteNotFound) ; Usando tu constante de "No encontrado"
+						Return
+					EndIf ; Fin de la condición de que se haya encontrado el botón completar transferencia tras la búsqueda alternativa lanzada con doble pulsación de la tecla rápida
+				EndIf; Fin de la condición de que se haya pulsado una o dos veces la cecla rápida
+			EndIf ; fin de la condición de que se haya encontrado el botón completar transferencia en la búsqueda secuencial habitual  
 			If StringContains(TextControl, TransferButton) != 0 || StringContains(TextControl, ResumeButton) != 0 || StringContains(TextControl, OnHoldCallState) != 0 Then 
-				; Si se encuentran los botones Transferir o Reanudar, o la etiqueta "espera" en el nombre de los objetos
+				; Si se encuentran los botones Transferir o Reanudar, o la etiqueta "espera" en el nombre de los objetos,
+				; es porque hay una llamada en espera pero no hay ninguna de destino focalizada,
+				; y por tanto, no se puede completar la transferencia.
 				SpeechOn ()
-				SayString (msgErrCallOnHold)
-				BrailleMessage (msgErrCallOnHold)
-				SayString (GetControlName ())
+				SayString (msgErrHoldNoFocus)
+				BrailleMessage (msgErrHoldNoFocus)
+								SayString (GetControlName ())
+				BrailleMessage (GetControlName ())
 				Return
 			EndIf
-			If Counter == MaxCount Then
+			If Counter == MaxCount || IFound == 0 Then
+			; si se llega al límite de búsquedas o no se ha localizado la etiqueta del botón completar transferencia durante las mismas, es porque no se ha encontrado el botón de completar transferencia,
+			; y se informa de ello.
 				SpeechOn ()
 				SayString (msgErrCompleteNotFound)
 				BrailleMessage (msgErrCompleteNotFound)
 				SayString (GetControlName ())		
+				BrailleMessage (GetControlName ())		
 				Return
 			EndIf
 		
