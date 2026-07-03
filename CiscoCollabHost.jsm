@@ -13,7 +13,7 @@ Guía de Comandos Webex
 Ayuda de Scripts para Webex
 
 REQUISITOS OPERATIVOS:
-- El programa debe estar actualizado a su última versión. 
+- El programa debe estar actualizado, al menos, a su versión 46.6.1.35236. 
 - La ventana de llamadas debe estar seleccionada (Control + 4).
 - El Dock de llamadas debe estar DESACTIVADO.
 

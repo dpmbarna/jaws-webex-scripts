@@ -30,8 +30,13 @@
 ; y tal activación no se produce, por lo que la llamada sigue sin ser transferida a pesar del mensaje lanzado por el script de confirmación, 
 ; y esta hay que transferirla buscando manualmente con shift + F6 dicho botón y activarlo con barra espaciadora. 
 ; Finalmente, se  añade en la ayuda de comandos de los scripts, la información referente a cómo completar una transferencia iniciada con el botón "Consultar Primero".
+;* Versión 1.4.1 terminada el 03/07/2026
+; Se modifica de nuevo el AutomationId del botón que despliega el teclado de marcación durante una llamada,
+; para que el script ActivateKeyboardButton vuelva a funcionar después de la última actualización de Webex.
+; También se indica el número de la versión mínima de Webex a la que se tiene que tener actualizado el programa para que los scripts funcionen correctamente
+; (en realidad, es el número de la versión del programa con la que han sido probados por última vez o para la que se han modificado los scripts más recientemente).  
 
-	; Los controles de Webex que activan estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
+	; Los controles de Webex que son activados por estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
 	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
 	; y además, algunos objetos ni siquiera Tienen un automation ID Único o Con alguna etiqueta incorporada.
 	
