@@ -1,4 +1,4 @@
-	; Webex script file versión v1.4
+	; Webex script file versión v1.5
 	; Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
 	; * Versión 1.0 terminada el 30/01/2026
 	; * Versión 1.1 terminada el 05/02/2026: 
@@ -35,6 +35,15 @@
 ; para que el script ActivateKeyboardButton vuelva a funcionar después de la última actualización de Webex.
 ; También se indica el número de la versión mínima de Webex a la que se tiene que tener actualizado el programa para que los scripts funcionen correctamente
 ; (en realidad, es el número de la versión del programa con la que han sido probados por última vez o para la que se han modificado los scripts más recientemente).  
+;* Versión 1.5 terminada el 16/10/2026
+; Se ha realizado varias correcciones y se ha ampliado la información que se ofrece en la ayuda de comandos. 
+; También se ha modificado la combinación de teclas rápidas que la muestra, que ahora es la estándar para todas las aplicaciones (TeclaJaws+h).
+; Se ha corregido y rehecho el mapa de teclas rápidas que usan los scripts de Webex para que todos ellos se puedan activar mediante ellas en cualquier asignación de teclado disponible
+; y se ha probado compatibilidad con Jaws 2026.
+
+
+
+
 
 	; Los controles de Webex que son activados por estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
 	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
@@ -109,13 +118,17 @@ MuteOffButtonState = "Silenciar",
 MuteOnButtonState = "Desactivar silencio",
 OnHoldCallState = "espera"
 
+
 Function AutoStartEvent ()
 	LoadNonJCFOptions ()
-		If GetVerbosity() == BEGINNER || GetVerbosity() == Intermediate && (!EnMemorias) then
+	If (!EnMemorias) then
 		Let EnMemorias=1
-		SayFormattedMessage (OT_Message, msgHelpIntro)
+		 If GetVerbosity() == BEGINNER || GetVerbosity() == Intermediate Then
+			SayFormattedMessage (OT_Message, msgHelpIntro)
+		EndIf
 	EndIf
 EndFunction
+
 
 
 Script HotKeyHelp ()
@@ -130,6 +143,7 @@ Script HotKeyHelp ()
 	UserBufferClear()
 	SayFormattedMessage(OT_User_Buffer, msgWebexScriptsHelp)
 EndScript
+
 
 Script GetTechnicalInfo ()
 	Var
@@ -193,6 +207,7 @@ SayFormattedMessage(OT_User_Buffer, msgDiagPropName + sName)
 	SayFormattedMessage(OT_User_Buffer, msgBufferExit)
 	EndIf
 EndScript
+
 
 Script CheckMuteStatus ()
 	Var
@@ -287,6 +302,8 @@ Script CheckMuteStatus ()
 	EndIf ; aquí ha terminado la condición de si el nombre de la ventana no es Webex (el foco no está en la ventana principal del programa)
 EndScript
 
+
+
 Script ActivateCheckFirstButton ()
 	Var
 		String WindowClass, 
@@ -362,6 +379,7 @@ Script ActivateCheckFirstButton ()
 		BrailleMessage (msgErrNoDialogGeneric)
 	EndIf
 EndScript
+
 
 Script ActivateTransferNowButton ()
 	Var
@@ -625,6 +643,7 @@ Script ActivateTransferNowButton ()
 	EndIf ; Aquí ha terminado la condición de si no hay algún diálogo abierto con su clase de ventana típica o alguno de los no exluidos en la primera condición
 EndScript
 
+
 Script ActivateEraseEntryButton ()
 	Var
 		String WindowClass, 
@@ -752,10 +771,7 @@ Script ActivateEraseEntryButton ()
 		SayString (msgErrNoDialogErase)
 		BrailleMessage (msgErrNoDialogErase)
 	EndIf
-	
-
 EndScript
-
 
 
 Script ActivateCancelButton ()
@@ -980,5 +996,4 @@ Var
 		BrailleMessage (msgNoCallHistoryListWindow)
 		Return
 	EndIf ; Fin de la condición de estar en un objeto de la ventana principal
-
 EndScript

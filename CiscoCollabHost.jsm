@@ -13,16 +13,17 @@ Guía de Comandos Webex
 Ayuda de Scripts para Webex
 
 REQUISITOS OPERATIVOS:
-- El programa debe estar actualizado, al menos, a su versión 46.6.1.35236. 
-- La ventana de llamadas debe estar seleccionada (Control + 4).
-- El Dock de llamadas debe estar DESACTIVADO.
+- El programa debe estar actualizado, al menos, a su versión 46.10.0.36042. 
+- La ventana de llamadas debe estar seleccionada (Control+4).
+- El Dock de llamadas debe estar DESACTIVADO desde la configuración del programa o mediante la pulsación de teclas asignada para ello (por defecto es Control+Mayúsculas+x).
 
-COMANDOS PARA LA LA VENTANA PRINCIPAL DE WEBEX:
-- Para llevar el foco al cuadro de edición que se usa para realizar una búsqueda o hacer una llamada pulsa Control + f.  
+COMANDOS PARA LA VENTANA PRINCIPAL DE WEBEX:
+- Para llevar el foco al cuadro de edición que se usa para realizar una búsqueda o hacer una llamada pulsa Control+f.  
 - Para activar el botón Borrar búsqueda (Limpia dicho cuadro de edición) pulsa %KeyFor(ActivateEraseEntryButton).
 - Para llevar el foco a la lista del historial de llamadas pulsa %KeyFor(GetHistorialList).
  
 COMANDOS PARA EL DIÁLOGO DE TRANSFERENCIA:
+- Para abrir el diálogo de transferencia pulsa la combinación de teclas asignada para ello (por defecto es Alt+t).
 - Para activar el botón Consultar primero (Permite hablar con el destino antes de transferir) pulsa %KeyFor(ActivateCheckfirstButton).
 - Para activar el botón Transferir ahora (Realiza la transferencia directa o ciega) o para completar una transferencia con consulta pulsa %KeyFor(ActivateTransferNowButton).
 Si al accionar este comando para completar una transferencia con consulta, esta no es completada (en ocasiones, falla el script por problemas con el buffer de memoria de Webex si el comando se usa cuando ya se está al habla con la persona de destino), se puede pulsar dos veces rápidamente para tratar de completarla salvando este problema.
@@ -34,7 +35,7 @@ COMANDOS PARA DIÁLOGOS DE TRANSFERENCIA Y CONFERENCIA:
 OTROS COMANDOS ÚTILES DURANTE UNA LLAMADA:
 - Para conocer el estado del Micrófono (Informa si está silenciado o activo) pulsa %KeyFor(CheckMuteStatus).
 Si quieres alternar su estado, Webex dispone de tecla rápida propia para ello 
-(por defecto Control + m).
+(por defecto es Control+m).
 - Para desplegar el teclado de marcación (para marcar opciones numéricas o códigos en sistemas de respuesta automatizada) pulsa %KeyFor(ActivateKeyboardButton).
 Ten en cuenta que es necesario volver a plegar el teclado de marcación pulsando Escape para poder transferir la llamada. 
 
@@ -45,7 +46,7 @@ pulsa %KeyFor(GetTechnicalInfo).
 Si lo pulsas una vez anunciará verbalmente la información;
 si lo pulsas dos veces rápidamente la mostrará en el visor virtual 
 
-
+- Para volver a ver esta información en cualquier momento pulsa %KeyFor(HotKeyHelp).
 Pulsa Escape para cerrar esta ventana
 @@
 @msgBufferExit

@@ -1,7 +1,7 @@
-# Scripts de JAWS para Cisco Webex (Versión 1.4.1)
+# Scripts de JAWS para Cisco Webex (Versión 1.5)
 
 **Autor:** David Prior  
-**Versión:** 1.4.1 (julio 2026)  
+**Versión:** 1.5 (octubre 2026)  
 **Compatibilidad:** JAWS 2025.2508.120 o superior.
 
 ## Descripción
@@ -12,7 +12,7 @@ El objetivo es facilitar tareas críticas como transferencias y gestión de audi
 ## Requisitos Previos y Operativa
 Para que los scripts funcionen correctamente, es fundamental seguir estas indicaciones:
 
-1.  **Actualización de Webex:** El programa debe estar actualizado, al menos, a su versión 46.6.1.35236. 
+1.  **Actualización de Webex:** El programa debe estar actualizado, al menos, a su versión 46.10.0.36042. 
 2.  **Configuración de Webex:** El \"Dock de llamadas\" debe estar **DESACTIVADO** en la configuración de la aplicación. Con el dock activo, JAWS no puede acceder correctamente a la jerarquía de objetos.
 3.  **Selección de Área:** Se debe estar en el área de llamadas de Webex (por defecto pulsando `Control + 4`).
 4.  **Uso de Transferencias (IMPORTANTE):** Antes de ejecutar los comandos de transferencia de estos scripts, el usuario debe **abrir primero el diálogo de transferencia** nativo de Webex (por defecto mediante la combinación `Alt + T`). Una vez abierto el diálogo y escrito el destino, se podrán usar los comandos rápidos descritos abajo.
@@ -20,8 +20,8 @@ Para que los scripts funcionen correctamente, es fundamental seguir estas indica
 ## Lista de Comandos
 
 ### Ayuda y Diagnóstico
-* **Shift + Insert + F1:** Ayuda dinámica. Muestra esta lista de comandos en el Visor Virtual.
-* **Shift + Insert + Z:** Información técnica. Muestra clase de ventana, Automation ID y propiedades del control enfocado (Diagnóstico).
+* **TeclaJaws + h:** Ayuda dinámica. Muestra esta lista de comandos en el Visor Virtual.
+* **Shift + TeclaJaws + Z:** Información técnica. Muestra clase de ventana, Automation ID y propiedades del control enfocado (Diagnóstico).
 
 ### Gestión de Llamadas
 * **Shift + Control + S:** Estado del micrófono (Silenciado / Activo).
