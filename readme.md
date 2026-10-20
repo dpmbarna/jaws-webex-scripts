@@ -13,7 +13,7 @@ El objetivo es facilitar tareas críticas como transferencias y gestión de audi
 Para que los scripts funcionen correctamente, es fundamental seguir estas indicaciones:
 
 1.  **Actualización de Webex:** El programa debe estar actualizado, al menos, a su versión 46.10.0.36042. 
-2.  **Configuración de Webex:** El \"Dock de llamadas\" debe estar **DESACTIVADO** en la configuración de la aplicación. Con el dock activo, JAWS no puede acceder correctamente a la jerarquía de objetos.
+2.  **Configuración de Webex:** El "Dock de llamadas" debe estar **DESACTIVADO** en la configuración de la aplicación. Con el dock activo, JAWS no puede acceder correctamente a la jerarquía de objetos.
 3.  **Selección de Área:** Se debe estar en el área de llamadas de Webex (por defecto pulsando `Control + 4`).
 4.  **Uso de Transferencias (IMPORTANTE):** Antes de ejecutar los comandos de transferencia de estos scripts, el usuario debe **abrir primero el diálogo de transferencia** nativo de Webex (por defecto mediante la combinación `Alt + T`). Una vez abierto el diálogo y escrito el destino, se podrán usar los comandos rápidos descritos abajo.
 
@@ -26,8 +26,8 @@ Para que los scripts funcionen correctamente, es fundamental seguir estas indica
 ### Gestión de Llamadas
 * **Shift + Control + S:** Estado del micrófono (Silenciado / Activo).
 * **Shift + Control + K:** Abrir Teclado de Marcación (Keypad) durante una llamada (útil para sistemas IVR).
-* **Shift + Control + G:** Ejecutar \"Consultar primero\" (una vez abierto el diálogo con `Alt + T`).
-* **Shift + Control + T:** Ejecutar \"Transferir ahora\" (una vez abierto el diálogo con `Alt + T`) o \"Completar transferencia\" si se ha iniciado previamente una transferencia con consulta.
+* **Shift + Control + G:** Ejecutar "Consultar primero" (una vez abierto el diálogo con `Alt + T`).
+* **Shift + Control + T:** Ejecutar "Transferir ahora" (una vez abierto el diálogo con `Alt + T`) o "Completar transferencia" si se ha iniciado previamente una transferencia con consulta.
 * **Shift + Control + Q:** Cancelar operación o cerrar cuadro de diálogo actual.
 
 ### Acceso rápido al historial de llamadas
@@ -38,11 +38,8 @@ Para que los scripts funcionen correctamente, es fundamental seguir estas indica
 
 ## Instalación y Ubicación de Archivos
 
-Para instalar los scripts, copia los archivos del repositorio (`.JSS`, `.jsm`, `.jkm`, `.jsd`, `.jsb`) en las carpetas de configuración de JAWS, en:
-* **Carpeta de Usuario:** `C:\Users\\[TuUsuario]\AppData\Roaming\Freedom Scientific\JAWS\2025\Settings\esn` (o `enu` para inglés).
-
-Copia también los archivos del repositorio `.jkm`, `.jsd`, `.jsb` en las carpetas de configuración de JAWS, en: 
-* **Carpetas de Sistema (All Users):** `C:\Users\All Users\Freedom Scientific\JAWS\2025\Scripts\` y `C:\Users\All Users\Freedom Scientific\JAWS\2025\Scripts\esn\` (o `enu` para inglés).
+Para instalar los scripts, copia los archivos del repositorio (`.JSS`, `.jsm`, `.jkm`, `.jsd`, `.jsb`) en la carpeta de configuración de JAWS, en:
+* **Carpeta de Usuario:** `C:\Users\[TuUsuario]\AppData\Roaming\Freedom Scientific\JAWS\2025\Settings\esn` (o `enu` para inglés).
 
 ## Notas Técnicas
 * **Metodología:** Los scripts utilizan bucles de búsqueda con `Tab` o `F6` para saltar entre controles cuando la referencia directa por ID no es posible.
