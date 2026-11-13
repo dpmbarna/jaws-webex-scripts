@@ -9,6 +9,11 @@
 :Synopsis Obtiene diferentes códigos de identificación del objeto enfocado y de la ventana en la que se encuentra, como el nombre de su ventana, su Control ID, su Automation ID, el nombre de su tipo de clase,  o su nombre y contenido.
 :Description Si se pulsa una vez se anuncia la información  técnica. Si se pulsa dos veces rápidamente, se muestra en el visor virtual la información y puede ser copiada desde allí a otras aplicaciones.
 
+:script CheckAvailabilityStatus
+:SearchRank 1
+:Synopsis Comprueba la disponibilidad del usuario de Webex, si está en primer plano la ventana principal de Webex y no hay ningún menú desplegado en ella en ese momento.
+:Description Detecta si en primer plano está la ventana principal de Webex y si es así, lleva el foco hasta el cuadro de edición para realizar una búsqueda o hacer una llamada, y a partir de hay retrocede directamente hasta la posición del botón "Perfil y preferencias", donde al activarlo mostrará el estado de su disponibilidad. Si este no se localiza de esta manera por cualquier motivo,   lanza una búsqueda secuencial por sus objetos con el fin de localizarlo.
+
 :script CheckMuteStatus
 :SearchRank 1
 :Synopsis Anuncia si el silencio del micrófono está activado o desactivado.
@@ -17,14 +22,12 @@
 :script ActivateCheckFirstButton
 :SearchRank 1
 :Synopsis Activa el botón "Consultar primero" en el diálogo de Transferencia si este está abierto.
-:Description Verifica que esté abierto el diálogo de transferencia y busca el botón "Consultar primero" entre sus objetos y lo activa
-
+:Description Verifica que esté abierto el diálogo de transferencia y busca el botón "Consultar primero" entre sus objetos y lo activa
 
 :script ActivateTransferNowButton
 :SearchRank 1
 :Synopsis Activa el botón "Transferir ahora" en el diálogo de Transferencia si este está abierto.
-:Description Verifica que esté abierto el diálogo de transferencia y busca el botón "Transferir ahora" entre sus objetos y lo activa.
-
+:Description Verifica que esté abierto el diálogo de transferencia y busca el botón "Transferir ahora" entre sus objetos y lo activa.
 
 :script ActivateEraseEntryButton
 :SearchRank 1

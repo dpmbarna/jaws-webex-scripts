@@ -21,7 +21,8 @@ COMANDOS PARA LA VENTANA PRINCIPAL DE WEBEX:
 - Para llevar el foco al cuadro de edición que se usa para realizar una búsqueda o hacer una llamada pulsa Control+f.  
 - Para activar el botón Borrar búsqueda (Limpia dicho cuadro de edición) pulsa %KeyFor(ActivateEraseEntryButton).
 - Para llevar el foco a la lista del historial de llamadas pulsa %KeyFor(GetHistorialList).
- 
+ - Para conocer tu estado o el modo de disponibilidad activo en un momento determinado (disponible, en una llamada, en modo no molestar) pulsa %KeyFor(CheckAvailabilityStatus).
+
 COMANDOS PARA EL DIÁLOGO DE TRANSFERENCIA:
 - Para abrir el diálogo de transferencia pulsa la combinación de teclas asignada para ello (por defecto es Alt+t).
 - Para activar el botón Consultar primero (Permite hablar con el destino antes de transferir) pulsa %KeyFor(ActivateCheckfirstButton).
@@ -105,6 +106,38 @@ El micrófono está activo
 @msgStatusMicMuted
 El micrófono está silenciado
 @@
+; Mensajes de Estado del tipo de disponibilidad (CheckAvailabilityStatus)
+@msgAvailStatusAvailable
+Ahora disponible
+@@
+@msgAvailStatusNotDisturb
+Modo no molestar activo
+@@
+@msgAvailStatusInACall
+Ahora en una llamada
+@@
+@msgAvailStatusInAMeeting
+Ahora en una reunión
+@@
+@msgAvailStatusSharingScreen
+Ahora compartiendo pantalla
+@@
+@msgAvailStatusBusy
+Modo ocupado activo
+@@
+@msgAvailStatusNoActive
+Modo no activo
+@@
+@msgAvailStatusOutOffice
+Modo fuera de la oficina activo
+@@
+@msgAvailStatusAwayDesktop
+Modo lejos del escritorio activo
+@@
+@msgAvailStatusQuietHours
+Modo horas tranquilas activo
+@@
+
 	; Mensajes de Acciones (Transferir, Consultar, Borrar, Cancelar)
 @msgActConsulting
 Consultando
@@ -133,8 +166,14 @@ Historial de llamadas
 @msgSearchingCallHistoryList
 Buscando el historial de llamadas
 @@
+@msgSearchingProfileButton
+Buscando...
+@@
+@msgCheckingAvailabilityStatus
+Obteniendo información
+@@
 
-	; Mensajes de acciones frustradas
+	; Mensajes por acciones frustradas
 @msgErrNoCallWindow
 No está en primer plano una ventana de llamada
 @@
@@ -191,6 +230,12 @@ La ventana que está en primer plano no es la que contiene el historial de llama
 @@
 @msgErrCallHistoryListNotFound
 No se ha localizado la lista del historial de llamadas
+@@
+@msgNoProfileButtonWindow
+La ventana que está en primer plano no es la que ofrece la información sobre la disponibilidad actual o hay algún menú desplegado, o la ventana principal ha cambiado de AutomationID
+@@
+@msgErrProfileButtonNotFound
+No se ha podido acceder a la información del tipo de disponibilidad actual
 @@
 
 EndMessages

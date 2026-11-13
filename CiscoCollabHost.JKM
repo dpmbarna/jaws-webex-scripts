@@ -1,5 +1,4 @@
 [Common Keys]
-Shift+JAWSKey+F1= 
 Shift+JAWSKey+Z=GetTechnicalInfo
 Shift+Control+S=CheckMuteStatus
 Shift+Control+G=ActivateCheckFirstButton
@@ -9,3 +8,4 @@ Shift+Control+Q=ActivateCancelButton
 Shift+Control+K=ActivateKeyboardButton
 Shift+Control+H=GetHistorialList
 Insert+H=HotKeyHelp
+Shift+JAWSKey+D=CheckAvailabilityStatus

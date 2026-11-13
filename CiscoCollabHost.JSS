@@ -1,13 +1,30 @@
-	; Webex script file versión v1.5
+	; Webex script file versión v1.6
+	
+		; Estos scripts se han creado y probado en una Edición actualizada a la última versión disponible de Webex en español con un número de teléfono asociado en el que hay una cola de llamadas vinculada y que forma parte de un grupo de extensiones,
+	; en la que el dock de llamadas (la ventana de llamadas con funciones extendidas) está desactivado desde la configuración de la aplicación
+	; porque de esta forma se facilita la captura por parte de Jaws de la información que aparece en primer plano o que se abre al contestar una llamada
+	; (con el dock activado no se logra llevar el foco a esa ventana de ninguna forma ni Jaws consigue acceder a su información a no ser que se haga clic con el ratón sobre ella),
+	; y en la que el área de la aplicación corespondiente a llamadas se ha seleccionado pulsando Control más 4.
+	
+	; El objetivo principal de estos scripts es facilitar la transferencia con consulta o la transferencia directa (ciega) con el Dock de llamadas desactivado,
+	; ya que carecen de teclas rápidas los botones que activan estas funciones.
+	; También pretenden facilitar la apertura del teclado en pantalla durante una llamada para la marcación de opciones en sistemas de respuesta automatizada,
+	; y acceder al estado del silencio del micrófono (micrófono activado o silenciado), ya que la información del mismo no es actualizada correctamente en tiempo real por Jaws o la aplicación. 
+
+	; Los controles de Webex que son activados por estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
+	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
+	; y además, algunos objetos ni siquiera Tienen un automation ID Único o Con alguna etiqueta incorporada.
+	
+	; Historial de cambios:
 	; Iniciados por David Prior en diciembre de 2025 para la versión 2025.2508.120 de Jaws.
-	; * Versión 1.0 terminada el 30/01/2026
-	; * Versión 1.1 terminada el 05/02/2026: 
+	; * Versión 1.0, terminada el 30/01/2026
+	; * Versión 1.1, terminada el 05/02/2026: 
 ; se modifica el script ActivateEraseEntryButton para que cuando sea activado en la ventana principal de Webex no habiendo ningún texto en el cuadro de edición de búsqueda, el foco quede en este último y no en el objeto siguiente a él.
-	; * Versión 1.2 terminada el 19/02/2026:
+	; * Versión 1.2, terminada el 19/02/2026:
 ; se modifican los parámetros de la función GetwindowName en todos los scripts para que recoja correctamente el nombre de la ventana enfocada en cada momento
 ; ya que, como consecuencia de una actualización de Webex en esas fechas, varios scripts dejaron de funcionar correctamente,
 ; y se adapta parte del código del script ActivateKeyboardButton para que siga funcionando.
-; * Versión 1.3 terminada el 29/05/2026:
+; * Versión 1.3, terminada el 29/05/2026:
 ; se cambian los códigos de tipos de ventana de la aplicación para adecuarlos a los de la actualización de Webex de esas fechas
 ; para que sigan funcionando correctamente varios scripts
 ; y se modifica la primera parte del script ActivateEraseEntryButton porque a partir de ahora
@@ -16,10 +33,10 @@
 ; hay que recurrir al texto del nombre del control para ello.
 ; Además, se añade un nuevo script para llevar el foco a la lista del historial de llamadas,
 ; cuando se está en la ventana principal de webex y no hay ningún menú desplegado en ese momento.
-; * Versión 1.3.1 terminada el 03/06/2026:
+; * Versión 1.3.1, terminada el 03/06/2026:
 ; se revisa, se añaden  y se Corrigen algunos mensajes  informativos del script ActivateTransferNowButton,
 ; y se completa y mejora su argumentación para que quede más clara la función de cada bloque de comandos dentro del script.
-;* Versión 1.4 terminada el 15/06/2026
+;* Versión 1.4, terminada el 15/06/2026
 ; Se modifica el AutomationId del botón que despliega el teclado de marcación durante una llamada,
 ; para que el script ActivateKeyboardButton vuelva a funcionar después de la última actualización de Webex.
 ; También se modifica el script ActivateTransferNowButton para tratar de solucionar con una segunda búsqueda alternativa,
@@ -30,35 +47,24 @@
 ; y tal activación no se produce, por lo que la llamada sigue sin ser transferida a pesar del mensaje lanzado por el script de confirmación, 
 ; y esta hay que transferirla buscando manualmente con shift + F6 dicho botón y activarlo con barra espaciadora. 
 ; Finalmente, se  añade en la ayuda de comandos de los scripts, la información referente a cómo completar una transferencia iniciada con el botón "Consultar Primero".
-;* Versión 1.4.1 terminada el 03/07/2026
+;* Versión 1.4.1, terminada el 03/07/2026
 ; Se modifica de nuevo el AutomationId del botón que despliega el teclado de marcación durante una llamada,
 ; para que el script ActivateKeyboardButton vuelva a funcionar después de la última actualización de Webex.
 ; También se indica el número de la versión mínima de Webex a la que se tiene que tener actualizado el programa para que los scripts funcionen correctamente
 ; (en realidad, es el número de la versión del programa con la que han sido probados por última vez o para la que se han modificado los scripts más recientemente).  
-;* Versión 1.5 terminada el 16/10/2026
+;* Versión 1.5, terminada el 16/10/2026
 ; Se ha realizado varias correcciones y se ha ampliado la información que se ofrece en la ayuda de comandos. 
 ; También se ha modificado la combinación de teclas rápidas que la muestra, que ahora es la estándar para todas las aplicaciones (TeclaJaws+h).
 ; Se ha corregido y rehecho el mapa de teclas rápidas que usan los scripts de Webex para que todos ellos se puedan activar mediante ellas en cualquier asignación de teclado disponible
 ; y se ha probado compatibilidad con Jaws 2026.
+;* Versión 1.5.1, terminada el 20/10/2026:
+; Se ha corregido el texto de presentación con la información y las instrucciones de instalación de los scripts.
+;* Versión 1.6, terminada el 13/11/2026:
+; Se ha añadido  el escript "CheckAvailabilityStatus", que sirve para anunciar el modo de disponibilidad que tiene activo el usuario en un momento determinado (disponible, en una llamada, en modo no molestar, etc.).
+; También se ha modificado las instrucciones de instalación de los scripts en la presentación para asegurar el correcto funcionamiento de los mismos, recomendando el reinicio del sistema una vez copiados en la carpeta de usuario.
 
 
 
-
-
-	; Los controles de Webex que son activados por estos scripts se buscan de forma secuencial a través de La repetición de la pulsación de la tecla tabulador Por las diferentes ventanas Y cuadros de diálogo de la aplicación,
-	; ya que Se ha intentado buscar los automation y de Por la jerarquía de objetos de la aplicación pero no se ha logrado localizar de esta forma,
-	; y además, algunos objetos ni siquiera Tienen un automation ID Único o Con alguna etiqueta incorporada.
-	
-	; Estos scripts se han creado y probado en una Edición actualizada a la última versión disponible de Webex en español con un número de teléfono asociado en el que hay una cola de llamadas vinculada y que forma parte de un grupo de extensiones,
-	; en la que el dock de llamadas (la ventana de llamadas con funciones extendidas) está desactivado desde la configuración de la aplicación
-	; porque de esta forma se facilita la captura por parte de Jaws de la información que aparece en primer plano o que se abre al contestar una llamada
-	; (con el dock activado no se logra llevar el foco a esa ventana de ninguna forma ni Jaws consigue acceder a su información a no ser que se haga clic con el ratón sobre ella),
-	; y en la que el área de la aplicación corespondiente a llamadas se ha seleccionado pulsando Control más 4.
-	
-	; El objetivo principal de estos scripts es facilitar la transferencia con consulta o la transferencia directa (ciega) con el Dock de llamadas desactivado,
-	; ya que carecen de teclas rápidas los botones que activan estas funciones.
-	; También pretenden facilitar la apertura del teclado en pantalla durante una llamada para la marcación de opciones en sistemas de respuesta automatizada,
-	; y acceder al estado del silencio del micrófono (micrófono activado o silenciado), ya que la información del mismo no es actualizada correctamente en tiempo real por Jaws o la aplicación. 
 
 
 include "HjConst.jsh"
@@ -93,7 +99,8 @@ Class_Dialog = "Qt683QWindowToolSaveBits",
 CancelDialogClass = "VectorButton",
 EraseEntryClass = "WSvgPushButton",
 EntryEditClass = "WLineEdit",
-CallHistoryListClass = "CallHistoryItem",	
+CallHistoryListClass = "CallHistoryItem",
+UserProfileButtonClass = "UTAvatarView",
 ;Automation ID's
 AutomationID_MainWindowObject = "SparkApp.MainWindow.ConversationsForm.topLevelStack.mainAreasWi",
 AutomationID_Keyboard = "SparkApp.CallControlBar.Main_CallStripButton_Keypad",
@@ -116,8 +123,17 @@ CompleteTransferButton = "ompletar transfer",
 JoinButton = "ombina",
 MuteOffButtonState = "Silenciar",
 MuteOnButtonState = "Desactivar silencio",
-OnHoldCallState = "espera"
-
+OnHoldCallState = "espera",
+Avail_AvailableStatus = "isponible",
+Avail_NotDisturbStatus = "molestar",
+Avail_InACallStatus = "una llamada",
+Avail_InAMeetingStatus = "una reuni",
+Avail_SharingScreenStatus = "pantalla",
+Avail_BusyStatus = "ocupad",
+Avail_NoActiveStatus = "activ",
+Avail_OutOfficeStatus = "fuera",
+Avail_AwayDesktopStatus = "lejos",
+Avail_QuietHoursStatus = "horas"
 
 Function AutoStartEvent ()
 	LoadNonJCFOptions ()
@@ -206,6 +222,149 @@ SayFormattedMessage(OT_User_Buffer, msgDiagPropName + sName)
 		UserBufferAddText (cScBufferNewLine)
 	SayFormattedMessage(OT_User_Buffer, msgBufferExit)
 	EndIf
+EndScript
+
+
+Script CheckAvailabilityStatus ()
+Var
+		string sID,
+		String sClassObject,
+		String sName,
+		Int iFound,
+		Int Counter,
+		Int MaxCount
+
+	Let Counter = 0
+	Let MaxCount = 18
+	Let iFound = 0
+
+	sClassObject = GetObjectClassName(0)	
+	sID = GetObjectAutomationId(0)
+
+	; Como todos los objetos de la ventanan principal de Webex han pasado a tener el mismo AutomationID a partir de la actualización de mayo de 2026,
+	; excepto los relativos al historial de llamadas, que comparten un mismo prefijo,
+	; por ese código de los objetos se puede detectar si se está en la ventana principal o no.
+			If StringContains (sID, AutomationID_MainWindowObject) != 0 || StringContains (sID, AutomationID_CallHistoryList) != 0 Then
+		;Si se está sobre un objeto de la ventana principal, se lleva el foco al cuadro de búsqueda y de ahí se retrocede directamente hasta el botón Perfil y Preferencias, que despliega el menú donde aparece la disponibilidad.
+		SpeechOff ()
+		TypeKey ("Control+F")
+		TypeKey ("shift + tab")
+		TypeKey ("shift + tab")
+		Pause ()
+		SpeechOn ()				
+		sClassObject = GetObjectClassName(0)	
+		If StringContains (sClassObject, UserProfileButtonClass) != 0 Then
+			Let iFound = 1			
+					Else
+			; Si no se está sobre el botón Perfil y Preferencias (la distibución de los objetos de la ventana principal no es la misma que en el programa que se ha usado para hacer estos scripts),
+			; se lanza una búsqueda secuencial con tabulador
+			; hasta que se encuentre o se supere un cierto número de búsquedas. 
+			While StringContains (sClassObject, UserProfileButtonClass) == 0 && Counter != MaxCount
+				SpeechOff ()
+				TypeKey("Tab")
+				Pause ()
+				sClassObject = GetObjectClassName(0)	
+				Let Counter = Counter + 1
+				
+				If Counter == 9 then
+					SpeechOn ()
+					SayString (msgSearchingProfileButton)
+					BrailleMessage (msgSearchingProfileButton)
+					Delay (1)
+					SpeechOff ()
+				EndIf
+			EndWhile
+			; Si se localiza el botón de Perfil y Preferencias se cambia el valor de iFound a 1 para pasar a la parte del script que conseguirá la información de la disponibilidad
+			If StringContains (sClassObject, UserProfileButtonClass) != 0 Then
+				Let iFound = 1
+			EndIf
+			; Si se alcanza el máximo de búsquedas secuenciales prefijado,
+			; es porque algo ha pasado y no se ha podido localizar el botón Perfil y Preferencias
+			If Counter == MaxCount then
+				SpeechOn ()
+				SayString(msgErrProfileButtonNotFound)
+				BrailleMessage (msgErrProfileButtonNotFound)
+				Return
+			EndIf
+		EndIf ; Fin de la condición de alcanzar el botón de Perfil y Preferencias con el truco de llegar hasta él rápidamente desde el cuadro de edición de búsqueda ; 
+		
+		; Si todo ha ido bien se habrá alcanzado el botón de Perfil y Preferencias, y si es así (se sabe por parte del nombre de su clase) se activa y se coge la información de la disponibilidad, de las opciones de mnú que se despliega.
+		If iFound == 1 Then
+			SayString(msgCheckingAvailabilityStatus)
+			BrailleMessage (msgCheckingAvailabilityStatus)
+;			Delay (1)
+			SpeechOff ()
+			TypeKey ("space")
+			Delay(2)
+			Pause ()
+			Pause ()
+			TypeKey ("UpArrow")
+			Delay (1)
+			Pause ()
+			Pause ()
+			TypeKey ("DownArrow")
+			Pause ()
+			Delay (1)
+			sName = GetControlName()
+			Pause ()
+			TypeKey ("Escape")
+			Pause ()
+			TypeKey ("Control + f")
+			Pause ()
+			TypeKey ("Escape")
+			TypeKey ("tab")
+			TypeKey ("shift+tab")
+			SpeechOn ()
+			If StringContains(SName, Avail_AvailableStatus) != 0 Then
+			;SayString (sName)
+				SayString(msgAvailStatusAvailable)
+				BrailleMessage (msgAvailStatusAvailable)
+			EndIf
+			If StringContains(SName, Avail_NotDisturbStatus) != 0 Then
+				SayString(msgAvailStatusNotDisturb)
+				BrailleMessage (msgAvailStatusNotDisturb)
+			EndIf
+			If StringContains(SName, Avail_InACallStatus) != 0 Then
+				SayString(msgAvailStatusInACall)
+				BrailleMessage (msgAvailStatusInACall)
+			EndIf
+			If StringContains(SName, Avail_InAMeetingStatus) != 0 Then
+				SayString(msgAvailStatusInAMeeting)
+				BrailleMessage (msgAvailStatusInAMeeting)
+			EndIf
+			If StringContains(SName, Avail_SharingScreenStatus) != 0 Then
+				SayString(msgAvailStatusSharingScreen)
+				BrailleMessage (msgAvailStatusSharingScreen)
+			EndIf
+			If StringContains(SName, Avail_BusyStatus) != 0 Then
+				SayString(msgAvailStatusBusy)
+				BrailleMessage (msgAvailStatusBusy)
+			EndIf
+			If StringContains(SName, Avail_NoActiveStatus) != 0 Then
+				SayString(msgAvailStatusNoActive)
+				BrailleMessage (msgAvailStatusNoActive)
+			EndIf
+			If StringContains(SName, Avail_OutOfficeStatus) != 0 Then
+				SayString(msgAvailStatusOutOffice)
+				BrailleMessage (msgAvailStatusOutOffice)
+			EndIf
+			If StringContains(SName, Avail_AwayDesktopStatus) != 0 Then
+				SayString(msgAvailStatusAwayDesktop)
+				BrailleMessage (msgAvailStatusAwayDesktop)
+			EndIf
+			If StringContains(SName, Avail_QuietHoursStatus) != 0 Then
+				SayString(msgAvailStatusQuietHours)
+				BrailleMessage (msgAvailStatusQuietHours)
+			EndIf
+
+		EndIf ; Fin de la condición de estar el foco sobre el botón Perfil y Preferencias
+	Else
+		; Si el objeto que tiene el foco no es uno de la ventana principal o hay algún menú desplegado en ese momento,
+		; no se puede acceder al botón Perfil y Preferencias, y por tanto, se informa de ello. 
+		SayString (msgNoProfileButtonWindow)
+		BrailleMessage (msgNoProfileButtonWindow)
+		Return
+	EndIf ; Fin de la condición de estar en un objeto de la ventana principal
 EndScript
 
 

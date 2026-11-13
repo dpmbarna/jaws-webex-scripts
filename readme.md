@@ -1,7 +1,7 @@
-# Scripts de JAWS para Cisco Webex (Versión 1.5)
+# Scripts de JAWS para Cisco Webex (Versión 1.6)
 
 **Autor:** David Prior  
-**Versión:** 1.5 (octubre 2026)  
+**Versión:** 1.6 (noviembre 2026)  
 **Compatibilidad:** JAWS 2025.2508.120 o superior.
 
 ## Descripción
@@ -40,6 +40,8 @@ Para que los scripts funcionen correctamente, es fundamental seguir estas indica
 
 Para instalar los scripts, copia los archivos del repositorio (`.JSS`, `.jsm`, `.jkm`, `.jsd`, `.jsb`) en la carpeta de configuración de JAWS, en:
 * **Carpeta de Usuario:** `C:\Users\[TuUsuario]\AppData\Roaming\Freedom Scientific\JAWS\2025\Settings\esn` (o `enu` para inglés).
+
+Es importante reiniciar el sistema después de copiarlos para asegurar su correcta ejecución.
 
 ## Notas Técnicas
 * **Metodología:** Los scripts utilizan bucles de búsqueda con `Tab` o `F6` para saltar entre controles cuando la referencia directa por ID no es posible.
