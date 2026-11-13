@@ -30,8 +30,9 @@ Para que los scripts funcionen correctamente, es fundamental seguir estas indica
 * **Shift + Control + T:** Ejecutar "Transferir ahora" (una vez abierto el diálogo con `Alt + T`) o "Completar transferencia" si se ha iniciado previamente una transferencia con consulta.
 * **Shift + Control + Q:** Cancelar operación o cerrar cuadro de diálogo actual.
 
-### Acceso rápido al historial de llamadas
+### Acceso rápido al historial de llamadas y al estado de la disponibilidad
 * **Shift + Control + H:** Ir al historial de llamadas. Lleva el foco al historial de llamadas si se está en la ventana principal del programa y no hay ningún menú desplegado.
+* **Shift + TeclaJaws + D:** Comprobar el estado o modo de disponibilidad del usuario en un momento determinado. Conocer si se está disponible, en una llamada o en modo no molestar, entre otras posibilidades, en cualquier momento si se está en la ventana principal del programa.
 
 ### Edición
 * **Shift + Control + Z:** Borrar entrada. Limpia rápidamente cuadros de edición o búsqueda.
